@@ -1,3 +1,6 @@
+LinkedIn Profile: 
+https://www.linkedin.com/in/muhammad-rezaldi
+
 Pengalaman saya dalam menggunakan AI selama imi terutama Gen AI adalah cukup baik dan memuaskan Gen AI seperti DeepSeek, ChatGPT, Claude, serta Gemini Google merupakan tools favorite saya untuk membantu saya mempercepat kerja, belajar dan brainstorming ide. Dalam hal Vibes Coding ini meruapakan hal yang baru bagi diri saya dan baru terjun dalam satu sampai dua bulan belakang ini, untuk saat ini vines coding bukan hanya mempercepat tapi juga memudahkan bagi diri saya yang sebelumnya sudah pernah ngoding secara manual yang mana membutuhkan effort yang lebih mulai dari menyelesaiakan error melalui stack overflow sampai dengan harus membaca dokumentasi dari programming atau framework yang digunakan
 
 
