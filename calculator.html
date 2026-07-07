@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Sederhana</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center">
+  <div class="bg-gray-800 rounded-2xl shadow-2xl p-6 w-80">
+    <div id="display" class="bg-gray-950 text-white text-right text-3xl font-mono p-4 rounded-xl mb-4 min-h-[72px] overflow-x-auto whitespace-nowrap">0</div>
+    <div class="grid grid-cols-4 gap-2">
+      <button class="clear col-span-2 bg-red-500 hover:bg-red-600 text-white p-4 rounded-xl text-xl font-bold transition">C</button>
+      <button class="operator bg-gray-600 hover:bg-gray-500 text-white p-4 rounded-xl text-xl font-bold transition" data-op="/">&divide;</button>
+      <button class="operator bg-gray-600 hover:bg-gray-500 text-white p-4 rounded-xl text-xl font-bold transition" data-op="*">&times;</button>
+
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="7">7</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="8">8</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="9">9</button>
+      <button class="operator bg-gray-600 hover:bg-gray-500 text-white p-4 rounded-xl text-xl font-bold transition" data-op="-">-</button>
+
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="4">4</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="5">5</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="6">6</button>
+      <button class="operator bg-gray-600 hover:bg-gray-500 text-white p-4 rounded-xl text-xl font-bold transition" data-op="+">+</button>
+
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="1">1</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="2">2</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="3">3</button>
+      <button class="equals bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-xl text-xl font-bold transition row-span-2 flex items-center justify-center" id="equalsBtn">=</button>
+
+      <button class="number col-span-2 bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num="0">0</button>
+      <button class="number bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-xl text-xl font-bold transition" data-num=".">.</button>
+    </div>
+    <p class="text-gray-500 text-center mt-4 text-sm">Kalkulator Sederhana</p>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let current = '0';
+    let previous = '';
+    let operator = null;
+    let shouldReset = false;
+    let afterEquals = false;
+    let formula = '0';
+
+    function updateDisplay() {
+      display.textContent = formula;
+    }
+
+    document.querySelectorAll('.number').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const num = btn.dataset.num;
+        if (num === '.' && current.includes('.')) return;
+
+        if (afterEquals) {
+          current = num === '.' ? '0.' : num;
+          formula = current;
+          afterEquals = false;
+          return updateDisplay();
+        }
+
+        if (shouldReset) {
+          current = num === '.' ? '0.' : num;
+          shouldReset = false;
+          const sym = { '+': '+', '-': '-', '*': '×', '/': '÷' }[operator] || '';
+          formula = `${previous} ${sym} ${current}`;
+        } else {
+          if (current === '0' && num !== '.') {
+            current = num;
+            formula = formula.slice(0, -1) + num;
+          } else {
+            current += num;
+            formula += num;
+          }
+        }
+        updateDisplay();
+      });
+    });
+
+    document.querySelectorAll('.operator').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const op = btn.dataset.op;
+        if (operator && !shouldReset) calculate();
+        previous = current;
+        operator = op;
+        shouldReset = true;
+        afterEquals = false;
+        const sym = { '+': '+', '-': '-', '*': '×', '/': '÷' }[op];
+        formula = `${previous} ${sym} `;
+        updateDisplay();
+      });
+    });
+
+    document.getElementById('equalsBtn').addEventListener('click', () => {
+      if (!operator) return;
+      calculate();
+      operator = null;
+    });
+
+    document.querySelector('.clear').addEventListener('click', () => {
+      current = '0';
+      previous = '';
+      operator = null;
+      shouldReset = false;
+      afterEquals = false;
+      formula = '0';
+      updateDisplay();
+    });
+
+    function calculate() {
+      const a = parseFloat(previous);
+      const b = parseFloat(current);
+      if (isNaN(a) || isNaN(b)) return;
+      const sym = { '+': '+', '-': '-', '*': '×', '/': '÷' }[operator] || operator;
+      const expression = `${previous} ${sym} ${current}`;
+      let result;
+      switch (operator) {
+        case '+': result = a + b; break;
+        case '-': result = a - b; break;
+        case '*': result = a * b; break;
+        case '/': result = b === 0 ? 'Error' : a / b; break;
+      }
+      current = typeof result === 'number'
+        ? (Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(6)).toString())
+        : result;
+      formula = `${expression} = ${current}`;
+      afterEquals = true;
+      updateDisplay();
+    }
+  </script>
+</body>
+</html>

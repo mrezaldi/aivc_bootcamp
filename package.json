@@ -1,0 +1,7 @@
+{
+  "name": "aivc_bootcamp",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve ."
+  }
+}
