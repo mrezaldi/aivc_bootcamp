@@ -1,0 +1,7 @@
+{
+  "name": "katalog",
+  "private": true,
+  "scripts": {
+    "start": "npx serve ."
+  }
+}
